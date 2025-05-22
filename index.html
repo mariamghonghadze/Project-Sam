@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>For My Long Distance Love</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&family=Inter:wght@400;600&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&display=swap');
+
+  /* Reset and base */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    height: 100%;
+    width: 100%;
+    font-family: 'Inter', sans-serif;
+    background: #000;
+    color: #eee;
+    overflow-x: hidden;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-y: auto;
+  }
+
+  /* Navbar */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: saturate(180%) blur(8px);
+    box-shadow: 0 2px 12px rgba(255,255,255,0.2);
+    z-index: 1001;
+    border-bottom: 1px solid #333;
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    padding: 1rem 2rem;
+  }
+
+  nav li {
+    margin: 0 1.3rem;
+  }
+
+  nav button {
+    background: none;
+    border: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #eee;
+    cursor: pointer;
+    padding: 0.35rem 0.9rem;
+    border-radius: 12px;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  nav button.active,
+  nav button:hover {
+    background-color: #555;
+    color: #fff;
+    box-shadow: 0 0 8px #ddd;
+  }
+
+  main {
+    flex: 1;
+    margin-top: 70px; /* navbar height plus spacing */
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 2rem 1rem 3rem;
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Home Section */
+  #home-section {
+    height: calc(100vh - 70px);
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  #home-background {
+    position: fixed;
+    top: 70px; /* Below navbar */
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 70px);
+    object-fit: cover;
+    object-position: center center;
+    z-index: 0;
+  }
+
+  /* Overlay black transparent */
+  #overlay {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 70px);
+    background: rgba(0,0,0,0.55);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  /* About Section */
+  #about-section {
+    display: none;
+    min-height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .about-container {
+    background: #111;
+    color: #ededed;
+    border-radius: 20px;
+    padding: 2.5rem 3rem;
+    box-shadow: 0 12px 30px rgba(255, 255, 255, 0.1);
+    text-align: center;
+    width: 100%;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .time-counter {
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    user-select: none;
+  }
+
+  /* Map Section */
+  #map-section {
+    display: none;
+  }
+
+  .map-container {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+    margin-bottom: 0.5rem;
+  }
+
+  iframe {
+    width: 100%;
+    height: 460px;
+    border: none;
+    filter: grayscale(100%) contrast(1.1) brightness(0.95);
+  }
+
+  .map-caption {
+    color: #ccc;
+    font-size: 1.15rem;
+    font-style: italic;
+    text-align: center;
+    user-select: none;
+    letter-spacing: 0.02em;
+  }
+
+  /* Music Section */
+  #music-section {
+    display: none;
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #ededed;
+  }
+
+  #music-section audio {
+    width: 90%;
+    max-width: 600px;
+    outline: none;
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(255,255,255,0.15);
+  }
+
+  #music-quote {
+    margin-top: 1.3rem;
+    font-style: italic;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: #ddd;
+    user-select: none;
+  }
+
+  /* For You Section */
+  #forYou-section {
+    display: none;
+    min-height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  #forYou-section img {
+    max-width: 90vw;
+    max-height: 70vh;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+  }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    main {
+      padding: 1.5rem 1rem 3rem;
+      max-width: 100%;
+    }
+    .time-counter {
+      font-size: 1.8rem;
+      letter-spacing: normal;
+    }
+    iframe {
+      height: 320px;
+    }
+    #music-section audio {
+      width: 100%;
+    }
+    #music-quote {
+      font-size: 1.1rem;
+    }
+    #forYou-section img {
+      max-width: 100vw;
+      max-height: 50vh;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav role="navigation" aria-label="Main Navigation">
+  <ul>
+    <li><button class="active" id="nav-home" aria-current="page">Home</button></li>
+    <li><button id="nav-about">About Us</button></li>
+    <li><button id="nav-map">Map</button></li>
+    <li><button id="nav-music">Music</button></li>
+    <li><button id="nav-forYou">For You</button></li>
+  </ul>
+</nav>
+
+<div id="home-section" aria-label="Homepage showing wallpaper background">
+  <img id="home-background" src="samsam.jpg" alt="Background wallpaper" />
+  <div id="overlay"></div>
+</div>
+
+<main>
+  <section id="about-section" class="page-section" tabindex="0" aria-label="About Us section showing time since meeting">
+    <div class="about-container" aria-live="polite" aria-atomic="true">
+      <div id="time-counter" class="time-counter" aria-label="Time since we met including years, months, days, hours, minutes and seconds"></div>
+    </div>
+  </section>
+
+  <section id="map-section" class="page-section" tabindex="0" aria-label="Map showing where we met">
+    <div class="map-container">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2381.8306914490403!2d44.79724311617861!3d41.711681607881506!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40440f65d2e8a815%3A0xdba93ee6d40eac4d!2sSamreklo%2017%2C%20Tbilisi%200110%2C%20Georgia!5e0!3m2!1sen!2sus!4v1694441880240!5m2!1sen!2sus"
+        loading="lazy"
+        allowfullscreen=""
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Map location where we met">
+      </iframe>
+    </div>
+    <div class="map-caption" aria-label="Caption about place where we met">Place Where We Met</div>
+  </section>
+
+  <section id="music-section" class="page-section" tabindex="0" aria-label="Music player section">
+    <audio controls preload="auto">
+      <source src="music.mp3" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
+    <div id="music-quote">This Song Reminds Me Of You</div>
+  </section>
+
+  <section id="forYou-section" class="page-section" tabindex="0" aria-label="For You section with centered gif">
+    <img src="flowers.gif" alt="Flowers animated gif" />
+  </section>
+</main>
+
+<script>
+  // Navigation logic
+  const navHome = document.getElementById('nav-home');
+  const navAbout = document.getElementById('nav-about');
+  const navMap = document.getElementById('nav-map');
+  const navMusic = document.getElementById('nav-music');
+  const navForYou = document.getElementById('nav-forYou');
+
+  const homeSection = document.getElementById('home-section');
+  const aboutSection = document.getElementById('about-section');
+  const mapSection = document.getElementById('map-section');
+  const musicSection = document.getElementById('music-section');
+  const forYouSection = document.getElementById('forYou-section');
+
+  function clearActive() {
+    navHome.classList.remove('active');
+    navAbout.classList.remove('active');
+    navMap.classList.remove('active');
+    navMusic.classList.remove('active');
+    navForYou.classList.remove('active');
+
+    navHome.removeAttribute('aria-current');
+    navAbout.removeAttribute('aria-current');
+    navMap.removeAttribute('aria-current');
+    navMusic.removeAttribute('aria-current');
+    navForYou.removeAttribute('aria-current');
+  }
+
+  function hideAllSections() {
+    homeSection.style.display = 'none';
+    aboutSection.style.display = 'none';
+    mapSection.style.display = 'none';
+    musicSection.style.display = 'none';
+    forYouSection.style.display = 'none';
+  }
+
+  navHome.addEventListener('click', () => {
+    clearActive();
+    navHome.classList.add('active');
+    navHome.setAttribute('aria-current', 'page');
+    hideAllSections();
+    homeSection.style.display = 'block';
+    homeSection.focus();
+  });
+
+  navAbout.addEventListener('click', () => {
+    clearActive();
+    navAbout.classList.add('active');
+    navAbout.setAttribute('aria-current', 'page');
+    hideAllSections();
+    aboutSection.style.display = 'flex';
+    updateTimeCounter();
+    aboutSection.focus();
+  });
+
+  navMap.addEventListener('click', () => {
+    clearActive();
+    navMap.classList.add('active');
+    navMap.setAttribute('aria-current', 'page');
+    hideAllSections();
+    mapSection.style.display = 'block';
+    mapSection.focus();
+  });
+
+  navMusic.addEventListener('click', () => {
+    clearActive();
+    navMusic.classList.add('active');
+    navMusic.setAttribute('aria-current', 'page');
+    hideAllSections();
+    musicSection.style.display = 'flex';
+    musicSection.focus();
+  });
+
+  navForYou.addEventListener('click', () => {
+    clearActive();
+    navForYou.classList.add('active');
+    navForYou.setAttribute('aria-current', 'page');
+    hideAllSections();
+    forYouSection.style.display = 'flex';
+    forYouSection.focus();
+  });
+
+  // Time since meeting calculation with real-time seconds update and updated text
+  function updateTimeCounter() {
+    const metDate = new Date(Date.UTC(2024, 9, 28, 0, 0, 0)); // October is month 9 zero-based
+
+    function update() {
+      const now = new Date();
+      let delta = now.getTime() - metDate.getTime();
+
+      if (delta < 0) {
+        document.getElementById('time-counter').textContent = "We haven't met yet!";
+        return;
+      }
+
+      let detailDate = new Date(metDate.getTime());
+
+      let years = 0;
+      while (new Date(detailDate.getFullYear() + 1, detailDate.getMonth(), detailDate.getDate()) <= now) {
+        years++;
+        detailDate = new Date(detailDate.getFullYear() + 1, detailDate.getMonth(), detailDate.getDate());
+      }
+
+      let months = 0;
+      while (new Date(detailDate.getFullYear(), detailDate.getMonth() + 1, detailDate.getDate()) <= now) {
+        months++;
+        detailDate = new Date(detailDate.getFullYear(), detailDate.getMonth() + 1, detailDate.getDate());
+      }
+
+      let days = Math.floor((now - detailDate) / (1000*60*60*24));
+      detailDate = new Date(detailDate.getTime() + days * 24 * 60 * 60 * 1000);
+
+      let hours = Math.floor((now - detailDate) / (1000*60*60));
+      let minutes = Math.floor((now - detailDate) / (1000*60)) % 60;
+      let seconds = Math.floor((now - detailDate) / 1000) % 60;
+
+      const formattedTime = [
+        years > 0 ? years + (years === 1 ? " year" : " years") : "",
+        months > 0 ? months + (months === 1 ? " month" : " months") : "",
+        days > 0 ? days + (days === 1 ? " day" : " days") : "",
+        (hours > 0 || minutes > 0 || seconds >= 0)
+          ? String(hours).padStart(2,'0') + "h "
+            + String(minutes).padStart(2,'0') + "m "
+            + String(seconds).padStart(2,'0') + "s" : ""
+      ].filter(Boolean).join(", ");
+
+      document.getElementById('time-counter').textContent = `${formattedTime} Since we met`;
+    }
+
+    update();
+    clearInterval(window.counterInterval);
+    window.counterInterval = setInterval(update, 1000);
+  }
+</script>
+
+</body>
+</html>
+
